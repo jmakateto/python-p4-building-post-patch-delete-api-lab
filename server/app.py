@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, request, make_response, jsonify, abort
 from flask_migrate import Migrate
 
 from models import db, Bakery, BakedGood
@@ -72,10 +72,10 @@ def create_baked_good():
 
 @app.route("/baked_goods/<int:id>", methods=["DELETE"])
 def delete_baked_good(id):
-    baked_good = BakedGood.query.get(id)
+    baked_good = BakedGood.query.filter_by(id=id).first()
 
     if baked_good is None:
-        return jsonify({"error": "Baked good not found"}), 404
+        abort(404)
 
     try:
         db.session.delete(baked_good)
