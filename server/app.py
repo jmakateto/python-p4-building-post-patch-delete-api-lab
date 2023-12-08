@@ -72,7 +72,10 @@ def create_baked_good():
 
 @app.route("/baked_goods/<int:id>", methods=["DELETE"])
 def delete_baked_good(id):
-    baked_good = BakedGood.query.get_or_404(id)
+    baked_good = BakedGood.query.get(id)
+
+    if baked_good is None:
+        return jsonify({"error": "Baked good not found"}), 404
 
     try:
         db.session.delete(baked_good)
